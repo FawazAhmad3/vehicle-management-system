@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vehicle Management System - Secure Dashboard</title>
+
+    <!-- Security Meta Tags -->
+    <meta
+      name="description"
+      content="Secure Vehicle Management System for tracking vehicle movement, fuel consumption, and repairs"
+    />
+    <meta
+      name="keywords"
+      content="vehicle management, fleet management, transport system, vehicle tracking"
+    />
+    <meta name="author" content="Vehicle Management System" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Vehicle Management System" />
+    <meta
+      property="og:description"
+      content="Secure Vehicle Management System Dashboard"
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>"
+    />
+
+    <!-- Include security headers script -->
+    <script src="headers.js"></script>
+
+    <!-- Your existing CSS and JS links -->
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- PROFESSIONAL LOGIN SCREEN -->
+    <div id="loginContainer" class="login-container">
+      <div class="login-card">
+        <!-- Logo/Header -->
+        <div class="login-header">
+          <div class="logo">
+            <i class="fas fa-car-side icon-primary"></i>
+            <h1>VMS Pro</h1>
+          </div>
+          <p class="subtitle">Vehicle Management System</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="login-form">
+          <div class="input-group">
+            <div class="input-wrapper">
+              <i class="fas fa-user input-icon"></i>
+              <input
+                type="text"
+                id="username"
+                class="input-field"
+                placeholder="Username"
+                value="admin"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="input-wrapper">
+              <i class="fas fa-lock input-icon"></i>
+              <input
+                type="password"
+                id="password"
+                class="input-field"
+                placeholder="Password"
+                value="admin"
+                required
+              />
+            </div>
+          </div>
+
+          <div id="loginError" class="error-message">Invalid credentials!</div>
+
+          <!-- Login Button -->
+          <button type="submit" class="login-btn">
+            <span class="btn-text">Sign In</span>
+            <div class="btn-loader" id="loginLoader">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+          </button>
+
+          <!-- Credentials Hint -->
+          <div class="credentials-hint">
+            <i class="fas fa-info-circle"></i>
+            <span>Default: admin / admin</span>
+          </div>
+        </form>
+
+        <!-- Features -->
+        <div class="login-features">
+          <div class="feature">
+            <i class="fas fa-download"></i>
+            <span>Auto Export</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-folder-open"></i>
+            <span>Folder Save</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-mobile-alt"></i>
+            <span>Mobile Ready</span>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="login-footer">
+          <p>© 2026 VMS Pro</p>
+        </div>
+      </div>
+
+      <!-- Background Animation -->
+      <div class="bg-animation">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD (UPDATED WITH NEW DASHBOARD TAB) -->
+    <div id="dashboardMain" class="dashboard">
+      <!-- Updated Professional Collapsible Navbar -->
+      <nav id="mainNav">
+        <div class="nav-container">
+          <!-- Logo/Brand -->
+          <div class="nav-brand">
+            <i class="fas fa-car-side"></i>
+            <span class="brand-text">VMS Pro</span>
+          </div>
+
+          <!-- Hamburger Menu for Mobile -->
+          <button class="nav-toggle" id="navToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Navigation Links -->
+          <div class="nav-menu" id="navMenu">
+            <button onclick="showSection('dashboard')" class="nav-link active">
+              <i class="fas fa-tachometer-alt"></i>
+              <span class="link-text">Dashboard</span>
+            </button>
+            <button onclick="showSection('movement')" class="nav-link">
+              <i class="fas fa-road"></i>
+              <span class="link-text">Movement Register</span>
+            </button>
+            <button onclick="showSection('pol')" class="nav-link">
+              <i class="fas fa-gas-pump"></i>
+              <span class="link-text">POL Account</span>
+            </button>
+            <button onclick="showSection('repair')" class="nav-link">
+              <i class="fas fa-tools"></i>
+              <span class="link-text">Repair Register</span>
+            </button>
+            <button onclick="showSection('settings')" class="nav-link">
+              <i class="fas fa-cog"></i>
+              <span class="link-text">Settings</span>
+            </button>
+            <button onclick="downloadAllCSVs()" class="nav-link download-btn">
+              <i class="fas fa-download"></i>
+              <span class="link-text">Manual Download</span>
+            </button>
+            <button onclick="logout()" class="nav-link logout-btn">
+              <i class="fas fa-sign-out-alt"></i>
+              <span class="link-text">Logout</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- NEW DASHBOARD SECTION -->
+      <div id="dashboard" class="section active">
+        <h2>📊 VMS Analytics Dashboard</h2>
+
+        <!-- Dashboard Filter -->
+        <div class="dashboard-filter">
+          <div class="filter-group">
+            <label for="dashboardView"
+              ><i class="fas fa-filter"></i> View:</label
+            >
+            <select id="dashboardView" onchange="updateDashboardView()">
+              <option value="overview">Overview</option>
+              <option value="vehicle">Vehicle Wise</option>
+              <option value="driver">Driver Wise</option>
+              <option value="register">Register Wise</option>
+            </select>
+          </div>
+          <div class="filter-group vehicle-filter" style="display: none">
+            <label for="vehicleSelect"
+              ><i class="fas fa-car"></i> Vehicle:</label
+            >
+            <select id="vehicleSelect" onchange="updateDashboardData()">
+              <option value="all">All Vehicles</option>
+            </select>
+          </div>
+          <div class="filter-group driver-filter" style="display: none">
+            <label for="driverSelect"
+              ><i class="fas fa-user"></i> Driver:</label
+            >
+            <select id="driverSelect" onchange="updateDashboardData()">
+              <option value="all">All Drivers</option>
+            </select>
+          </div>
+          <div class="filter-group date-filter">
+            <label for="dateRange"
+              ><i class="fas fa-calendar"></i> Date Range:</label
+            >
+            <select id="dateRange" onchange="updateDashboardData()">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month" selected>This Month</option>
+              <option value="year">This Year</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+          <button onclick="refreshDashboard()" class="refresh-btn">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+
+        <!-- KPI Cards Row -->
+        <div class="kpi-grid">
+          <div class="kpi-card total-entries">
+            <div class="kpi-icon">📋</div>
+            <div class="kpi-content">
+              <div class="kpi-number" id="totalEntries">0</div>
+              <div class="kpi-label">Total Entries</div>
+              <div class="kpi-subtext" id="totalEntriesDetail"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card fuel-total">
+            <div class="kpi-icon">⛽</div>
+            <div class="kpi-content">
+              <div class="kpi-number" id="totalFuel">0L</div>
+              <div class="kpi-label">Total Fuel</div>
+              <div class="kpi-subtext" id="totalFuelDetail"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card repair-cost">
+            <div class="kpi-icon">🔧</div>
+            <div class="kpi-content">
+              <div class="kpi-number" id="totalRepair">₨0</div>
+              <div class="kpi-label">Repair Costs</div>
+              <div class="kpi-subtext" id="totalRepairDetail"></div>
+            </div>
+          </div>
+
+          <div class="kpi-card active-vehicles">
+            <div class="kpi-icon">🚗</div>
+            <div class="kpi-content">
+              <div class="kpi-number" id="activeVehicles">0</div>
+              <div class="kpi-label">Active Vehicles</div>
+              <div class="kpi-subtext" id="activeVehiclesDetail"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vehicle & Driver Stats -->
+        <div class="stats-grid">
+          <div class="stats-card">
+            <h3>Top Vehicles by Movement</h3>
+            <div id="topVehicles" class="stats-list"></div>
+          </div>
+          <div class="stats-card">
+            <h3>Top Drivers</h3>
+            <div id="topDrivers" class="stats-list"></div>
+          </div>
+          <div class="stats-card">
+            <h3>Fuel Consumption by Vehicle</h3>
+            <div id="fuelByVehicle" class="stats-list"></div>
+          </div>
+          <div class="stats-card">
+            <h3>Repair Costs by Vehicle</h3>
+            <div id="repairByVehicle" class="stats-list"></div>
+          </div>
+        </div>
+
+        <!-- Register Wise Breakdown -->
+        <div class="breakdown-card">
+          <h3>Register Wise Breakdown</h3>
+          <div class="breakdown-grid">
+            <div class="breakdown-item">
+              <h4>Movement Register</h4>
+              <div class="breakdown-stats">
+                <div class="stat">
+                  <span class="stat-label">Total Entries:</span>
+                  <span class="stat-value" id="movementEntries">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Active Vehicles:</span>
+                  <span class="stat-value" id="movementVehicles">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Total KM:</span>
+                  <span class="stat-value" id="movementKM">0</span>
+                </div>
+              </div>
+            </div>
+            <div class="breakdown-item">
+              <h4>POL Register</h4>
+              <div class="breakdown-stats">
+                <div class="stat">
+                  <span class="stat-label">Total Entries:</span>
+                  <span class="stat-value" id="polEntries">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Fuel Quantity:</span>
+                  <span class="stat-value" id="polFuelQty">0L</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Total Cost:</span>
+                  <span class="stat-value" id="polCost">₨0</span>
+                </div>
+              </div>
+            </div>
+            <div class="breakdown-item">
+              <h4>Repair Register</h4>
+              <div class="breakdown-stats">
+                <div class="stat">
+                  <span class="stat-label">Total Entries:</span>
+                  <span class="stat-value" id="repairEntries">0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Repair Cost:</span>
+                  <span class="stat-value" id="repairCost">₨0</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Active Vehicles:</span>
+                  <span class="stat-value" id="repairVehicles">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-grid">
+          <!-- Movement Trends -->
+          <div class="chart-card">
+            <h3>Movement Activity</h3>
+            <canvas id="movementChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Fuel Consumption -->
+          <div class="chart-card">
+            <h3>Fuel Usage</h3>
+            <canvas id="fuelChart" width="400" height="200"></canvas>
+          </div>
+
+          <!-- Repair Timeline -->
+          <div class="chart-card full-width">
+            <h3>Repair & Maintenance Timeline</h3>
+            <canvas id="repairChart" width="800" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+          <h3>Recent Activity</h3>
+          <div id="recentActivity" class="activity-list">
+            <!-- Dynamic content loaded by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. Movement Register (Page 117) - UPDATED -->
+      <div id="movement" class="section">
+        <h2>Staff Vehicles Movement Register (Page 117)</h2>
+
+        <!-- Full Add Form -->
+        <div class="full-add-form">
+          <h3><i class="fas fa-plus-circle"></i> Add New Movement Entry</h3>
+          <div class="form-grid">
+            <!-- Vehicle and Driver Info -->
+            <div class="form-group">
+              <label for="addVehicleNo"
+                >Vehicle No: <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="addVehicleNo"
+                class="form-control"
+                placeholder="Enter vehicle plate number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addDriverName"
+                >Driver Name: <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="addDriverName"
+                class="form-control"
+                placeholder="Enter driver name"
+                required
+              />
+            </div>
+
+            <!-- Entry Details -->
+            <div class="form-group">
+              <label for="addDate">Date: <span class="required">*</span></label>
+              <input
+                type="date"
+                id="addDate"
+                class="form-control"
+                value=""
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addTime">Time (From-To):</label>
+              <input
+                type="text"
+                id="addTime"
+                class="form-control"
+                placeholder="09:00 | 17:30"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addStaff"
+                >Staff Name: <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="addStaff"
+                class="form-control"
+                placeholder="Enter staff name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addPlace">Place (From-To):</label>
+              <input
+                type="text"
+                id="addPlace"
+                class="form-control"
+                placeholder="Office | Client Site"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addPurpose"
+                >Purpose: <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="addPurpose"
+                class="form-control"
+                placeholder="Official meeting"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addMeter">Meter Reading (From-To):</label>
+              <input
+                type="text"
+                id="addMeter"
+                class="form-control"
+                placeholder="15000 | 15045"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addStaffSig">Staff Signature:</label>
+              <input
+                type="text"
+                id="addStaffSig"
+                class="form-control"
+                placeholder="Initials"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addDriverSig">Driver Signature:</label>
+              <input
+                type="text"
+                id="addDriverSig"
+                class="form-control"
+                placeholder="Initials"
+              />
+            </div>
+          </div>
+          <button onclick="addNewMovementEntry()" class="add-row full-add-btn">
+            <i class="fas fa-plus"></i> Add New Entry
+          </button>
+          <div class="form-note">
+            <span class="required">*</span> Required fields
+          </div>
+        </div>
+
+        <!-- Table Search and Filter -->
+        <div class="table-controls">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="movementSearch"
+              placeholder="Search entries..."
+              onkeyup="filterMovementTable()"
+            />
+          </div>
+          <div class="table-actions">
+            <button onclick="scrollToTop()" class="action-btn">
+              <i class="fas fa-arrow-up"></i> Top
+            </button>
+            <button onclick="scrollToBottom()" class="action-btn">
+              <i class="fas fa-arrow-down"></i> Bottom
+            </button>
+            <button onclick="clearMovementFilters()" class="action-btn">
+              <i class="fas fa-filter"></i> Clear Filters
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Table -->
+        <div class="table-responsive">
+          <table id="movTable">
+            <thead>
+              <tr>
+                <th>Vehicle No</th>
+                <th>Driver Name</th>
+                <th>Date</th>
+                <th>
+                  Time<br /><span class="column-subtitle">From | To</span>
+                </th>
+                <th>Staff Name</th>
+                <th>
+                  Place<br /><span class="column-subtitle">From | To</span>
+                </th>
+                <th>Purpose</th>
+                <th>
+                  Meter Reading<br /><span class="column-subtitle"
+                    >From | To</span
+                  >
+                </th>
+                <th>K. Meter Covered</th>
+                <th>Staff Signature</th>
+                <th>Driver Signature</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content loaded by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Floating Add Button -->
+        <button
+          class="floating-add-btn"
+          onclick="scrollToForm()"
+          title="Add New Entry"
+        >
+          <i class="fas fa-plus"></i>
+        </button>
+
+        <!-- Table Statistics -->
+        <div class="table-stats">
+          <span id="movementStats">Showing 0 entries</span>
+          <div class="pagination">
+            <button onclick="previousPage('movement')" class="page-btn">
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <span id="movementPageInfo">Page 1 of 1</span>
+            <button onclick="nextPage('movement')" class="page-btn">
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="table-instructions">
+          <p><strong>Instructions:</strong></p>
+          <ul>
+            <li>
+              Fill all required fields in the form above to add a new entry
+            </li>
+            <li>Click on any table cell to edit the content</li>
+            <li>Use search box to find specific entries</li>
+            <li>Use Top/Bottom buttons to navigate quickly</li>
+            <li>
+              For Time and Meter Reading: Enter values in format "From | To"
+              (e.g., "09:00 | 17:30")
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2. POL Account Register (Page 75) - UPDATED -->
+      <div id="pol" class="section">
+        <h2>
+          Petrol/Diesel (POL) Account Register & Record of Mileage (Page 75)
+        </h2>
+
+        <!-- Full Add Form for POL -->
+        <div class="full-add-form">
+          <h3><i class="fas fa-gas-pump"></i> Add New Fuel Entry</h3>
+          <div class="form-grid">
+            <!-- Vehicle Info -->
+            <div class="form-group">
+              <label for="addPolVehicleNo"
+                >Vehicle No: <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="addPolVehicleNo"
+                class="form-control"
+                placeholder="Enter vehicle ID"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addMonth">Month:</label>
+              <input
+                type="text"
+                id="addMonth"
+                class="form-control"
+                placeholder="e.g., January"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addYear">Year:</label>
+              <input
+                type="text"
+                id="addYear"
+                class="form-control"
+                placeholder="20XX"
+              />
+            </div>
+
+            <!-- Entry Details -->
+            <div class="form-group">
+              <label for="addPolDate"
+                >Date: <span class="required">*</span></label
+              >
+              <input
+                type="date"
+                id="addPolDate"
+                class="form-control"
+                value=""
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addFuelType">Fuel Type:</label>
+              <select id="addFuelType" class="form-control">
+                <option value="Diesel">Diesel</option>
+                <option value="Petrol">Petrol</option>
+                <option value="CNG">CNG</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="addCoupon">Coupon/Voucher No:</label>
+              <input
+                type="text"
+                id="addCoupon"
+                class="form-control"
+                placeholder="CV-"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addQty"
+                >Quantity (L): <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="addQty"
+                class="form-control"
+                placeholder="50"
+                step="0.1"
+                min="0.1"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addRate"
+                >Rate (Rs.): <span class="required">*</span></label
+              >
+              <input
+                type="number"
+                id="addRate"
+                class="form-control"
+                placeholder="275.50"
+                step="0.01"
+                min="0"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="addPump">Pump Name/Bill No.:</label>
+              <input
+                type="text"
+                id="addPump"
+                class="form-control"
+                placeholder="Shell Station - BILL#12345"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addOilMR">Oil Change MR:</label>
+              <input
+                type="number"
+                id="addOilMR"
+                class="form-control"
+                placeholder="15000"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addOilFilterMR">Oil Filter MR:</label>
+              <input
+                type="number"
+                id="addOilFilterMR"
+                class="form-control"
+                placeholder="14500"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addFuelFilterMR">Fuel Filter MR:</label>
+              <input
+                type="number"
+                id="addFuelFilterMR"
+                class="form-control"
+                placeholder="14800"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addAirFilterMR">Air Filter MR:</label>
+              <input
+                type="number"
+                id="addAirFilterMR"
+                class="form-control"
+                placeholder="14900"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addTransportSig">Transport In-Charge Sig:</label>
+              <input
+                type="text"
+                id="addTransportSig"
+                class="form-control"
+                placeholder="TIC"
+              />
+            </div>
+            <div class="form-group">
+              <label for="addRegistrarSig">Registrar Sig:</label>
+              <input
+                type="text"
+                id="addRegistrarSig"
+                class="form-control"
+                placeholder="REG"
+              />
+            </div>
+          </div>
+          <button onclick="addNewPolEntry()" class="add-row full-add-btn">
+            <i class="fas fa-plus"></i> Add New Fuel Entry
+          </button>
+          <div class="form-note">
+            <span class="required">*</span> Required fields
+          </div>
+        </div>
+
+        <!-- Table Controls -->
+        <div class="table-controls">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="polSearch"
+              placeholder="Search POL entries..."
+              onkeyup="filterPolTable()"
+            />
+          </div>
+          <div class="table-actions">
+            <button onclick="scrollToTop()" class="action-btn">
+              <i class="fas fa-arrow-up"></i> Top
+            </button>
+            <button onclick="scrollToBottom()" class="action-btn">
+              <i class="fas fa-arrow-down"></i> Bottom
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Table -->
+        <div class="table-responsive">
+          <table id="polTable">
+            <thead>
+              <tr>
+                <th>S. No</th>
+                <th>Vehicle No</th>
+                <th>Month</th>
+                <th>Year</th>
+                <th>Date</th>
+                <th>Fuel Type</th>
+                <th>Coupon/Voucher No</th>
+                <th>Quantity (L)</th>
+                <th>Rate (Rs.)</th>
+                <th>Pump/Bill Details</th>
+                <th>Oil Change MR</th>
+                <th>Oil Filter MR</th>
+                <th>Fuel Filter MR</th>
+                <th>Air Filter MR</th>
+                <th>Transport Sig</th>
+                <th>Registrar Sig</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic content loaded by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Floating Add Button -->
+        <button
+          class="floating-add-btn"
+          onclick="scrollToPolForm()"
+          title="Add Fuel Entry"
+        >
+          <i class="fas fa-gas-pump"></i>
+        </button>
+
+        <!-- Summary Section -->
+        <div class="summary" id="polSummary">
+          <!-- Summary will be loaded here -->
+        </div>
+
+        <div class="table-instructions">
+          <p><strong>Instructions:</strong></p>
+          <ul>
+            <li>
+              Fill all required fields in the form above to add a new fuel entry
+            </li>
+            <li>Total cost is calculated automatically (Quantity × Rate)</li>
+            <li>Fill filter readings only when applicable</li>
+            <li>Monthly summary updates automatically</li>
+            <li>
+              Signature fields can be filled with initials or full signatures
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Repair Register (Page 97) - UPDATED -->
+      <div id="repair" class="section">
+        <h2>Staff Vehicles Repair & Maintenance Register (Page 97)</h2>
+
+        <!-- Section Navigation -->
+        <div class="section-navigation">
+          <button
+            onclick="showRepairSection('general')"
+            class="section-nav-btn active"
+          >
+            <i class="fas fa-wrench"></i> General Repairs
+          </button>
+          <button onclick="showRepairSection('tyre')" class="section-nav-btn">
+            <i class="fas fa-tire"></i> Tyre Management
+          </button>
+          <button
+            onclick="showRepairSection('battery')"
+            class="section-nav-btn"
+          >
+            <i class="fas fa-car-battery"></i> Battery Replacement
+          </button>
+        </div>
+
+        <!-- Section 1: General Repair & Maintenance -->
+        <div class="repair-section active" id="generalRepair">
+          <div class="section-header">
+            <h3>
+              <i class="fas fa-wrench"></i> Section 1: General Repair &
+              Maintenance
+            </h3>
+          </div>
+
+          <!-- Full Add Form for General Repairs -->
+          <div class="full-add-form">
+            <h4>
+              <i class="fas fa-plus-circle"></i> Add New General Repair Entry
+            </h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="addRepVehicleNo"
+                  >Vehicle No: <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="addRepVehicleNo"
+                  class="form-control"
+                  placeholder="Enter vehicle ID"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addDateIn"
+                  >Date In: <span class="required">*</span></label
+                >
+                <input
+                  type="date"
+                  id="addDateIn"
+                  class="form-control"
+                  value=""
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addDateOut">Date Out:</label>
+                <input
+                  type="date"
+                  id="addDateOut"
+                  class="form-control"
+                  value=""
+                />
+              </div>
+              <div class="form-group">
+                <label for="addRepairDetails"
+                  >Repair Details: <span class="required">*</span></label
+                >
+                <textarea
+                  id="addRepairDetails"
+                  class="form-control"
+                  placeholder="Describe the repair work"
+                  rows="2"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="addRepairCost">Cost (Rs.):</label>
+                <input
+                  type="number"
+                  id="addRepairCost"
+                  class="form-control"
+                  placeholder="0"
+                  step="0.01"
+                  min="0"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addVoucherNo">Voucher No:</label>
+                <input
+                  type="text"
+                  id="addVoucherNo"
+                  class="form-control"
+                  placeholder="CV-REP-"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addRepTransportSig">Transport In-Charge Sig:</label>
+                <input
+                  type="text"
+                  id="addRepTransportSig"
+                  class="form-control"
+                  placeholder="TIC"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addRepRegistrarSig">Registrar Sig:</label>
+                <input
+                  type="text"
+                  id="addRepRegistrarSig"
+                  class="form-control"
+                  placeholder="REG"
+                />
+              </div>
+            </div>
+            <button onclick="addNewRepairEntry()" class="add-row full-add-btn">
+              <i class="fas fa-plus"></i> Add Repair Entry
+            </button>
+            <div class="form-note">
+              <span class="required">*</span> Required fields
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table id="repTable">
+              <thead>
+                <tr>
+                  <th>Vehicle No</th>
+                  <th>Date In</th>
+                  <th>Date Out</th>
+                  <th>Repair Details</th>
+                  <th>Cost (Rs.)</th>
+                  <th>Voucher No</th>
+                  <th>Transport Sig</th>
+                  <th>Registrar Sig</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dynamic content loaded by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Tyre Management -->
+        <div class="repair-section" id="tyreRepair" style="display: none">
+          <div class="section-header">
+            <h3><i class="fas fa-tire"></i> Section 2: Tyre Management</h3>
+          </div>
+
+          <!-- Full Add Form for Tyre Management -->
+          <div class="full-add-form">
+            <h4><i class="fas fa-plus-circle"></i> Add New Tyre Entry</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="addTyreVehicleNo"
+                  >Vehicle No: <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="addTyreVehicleNo"
+                  class="form-control"
+                  placeholder="Enter vehicle ID"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addTyreMake"
+                  >Tyre Make & Size: <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="addTyreMake"
+                  class="form-control"
+                  placeholder="Michelin 205/55 R16"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addCurrentMR">Current Meter Reading:</label>
+                <input
+                  type="number"
+                  id="addCurrentMR"
+                  class="form-control"
+                  placeholder="15200"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addLastMR">Last Meter Reading:</label>
+                <input
+                  type="number"
+                  id="addLastMR"
+                  class="form-control"
+                  placeholder="10000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addTotalKMDue">Total KM Due:</label>
+                <input
+                  type="number"
+                  id="addTotalKMDue"
+                  class="form-control"
+                  placeholder="40000"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addTyreDate">Purchase Date:</label>
+                <input
+                  type="date"
+                  id="addTyreDate"
+                  class="form-control"
+                  value=""
+                />
+              </div>
+              <div class="form-group">
+                <label for="addTyreNo">Tyre No:</label>
+                <input
+                  type="text"
+                  id="addTyreNo"
+                  class="form-control"
+                  placeholder="TYR-001"
+                />
+              </div>
+            </div>
+            <button onclick="addNewTyreEntry()" class="add-row full-add-btn">
+              <i class="fas fa-plus"></i> Add Tyre Entry
+            </button>
+            <div class="form-note">
+              <span class="required">*</span> Required fields
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table id="tyreTable">
+              <thead>
+                <tr>
+                  <th>Vehicle No</th>
+                  <th>Tyre Make & Size</th>
+                  <th>Current MR</th>
+                  <th>Last MR</th>
+                  <th>Total KM Due</th>
+                  <th>Purchase Date</th>
+                  <th>Tyre No</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dynamic content loaded by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 3: Battery Replacement -->
+        <div class="repair-section" id="batteryRepair" style="display: none">
+          <div class="section-header">
+            <h3>
+              <i class="fas fa-car-battery"></i> Section 3: Battery Replacement
+            </h3>
+          </div>
+
+          <!-- Full Add Form for Battery Replacement -->
+          <div class="full-add-form">
+            <h4><i class="fas fa-plus-circle"></i> Add New Battery Entry</h4>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="addBatVehicleNo"
+                  >Vehicle No: <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="addBatVehicleNo"
+                  class="form-control"
+                  placeholder="Enter vehicle ID"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addCurrentBattery">Current Battery Details:</label>
+                <input
+                  type="text"
+                  id="addCurrentBattery"
+                  class="form-control"
+                  placeholder="EXIDE 12V 60Ah"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addLastReplacement">Last Replacement Date:</label>
+                <input
+                  type="date"
+                  id="addLastReplacement"
+                  class="form-control"
+                  value=""
+                />
+              </div>
+              <div class="form-group">
+                <label for="addNewBattery"
+                  >New Battery Details: <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  id="addNewBattery"
+                  class="form-control"
+                  placeholder="AMARON 12V 65Ah"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="addNewBatteryDate"
+                  >New Battery Purchase Date:</label
+                >
+                <input
+                  type="date"
+                  id="addNewBatteryDate"
+                  class="form-control"
+                  value=""
+                />
+              </div>
+              <div class="form-group">
+                <label for="addBatTransportSig">Transport In-Charge Sig:</label>
+                <input
+                  type="text"
+                  id="addBatTransportSig"
+                  class="form-control"
+                  placeholder="TIC"
+                />
+              </div>
+              <div class="form-group">
+                <label for="addBatRegistrarSig">Registrar Sig:</label>
+                <input
+                  type="text"
+                  id="addBatRegistrarSig"
+                  class="form-control"
+                  placeholder="REG"
+                />
+              </div>
+            </div>
+            <button onclick="addNewBatteryEntry()" class="add-row full-add-btn">
+              <i class="fas fa-plus"></i> Add Battery Entry
+            </button>
+            <div class="form-note">
+              <span class="required">*</span> Required fields
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table id="batTable">
+              <thead>
+                <tr>
+                  <th>Vehicle No</th>
+                  <th>Current Battery</th>
+                  <th>Last Replacement</th>
+                  <th>New Battery</th>
+                  <th>Purchase Date</th>
+                  <th>Transport Sig</th>
+                  <th>Registrar Sig</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dynamic content loaded by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Floating Add Button -->
+        <button
+          class="floating-add-btn"
+          onclick="scrollToRepairForm()"
+          title="Add Repair Entry"
+        >
+          <i class="fas fa-tools"></i>
+        </button>
+
+        <div class="table-instructions">
+          <p><strong>Maintenance Guidelines:</strong></p>
+          <ul>
+            <li>
+              Use the section buttons above to switch between repair types
+            </li>
+            <li>Fill all required fields in the form to add new entries</li>
+            <li>Click on any table cell to edit the content</li>
+            <li>All entries require signatures for approval</li>
+            <li>Keep service records for warranty claims and resale value</li>
+            <li>Regular maintenance helps in reducing major repair costs</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Settings Section - UPDATED -->
+      <div id="settings" class="section">
+        <h2><i class="fas fa-cog"></i> Settings & Automation</h2>
+
+        <!-- Download Settings -->
+        <div class="settings-card">
+          <h3><i class="fas fa-download"></i> Download Settings</h3>
+
+          <div class="settings-group">
+            <label for="downloadFolder"
+              ><i class="fas fa-folder"></i> Download Folder Path:</label
+            >
+            <div class="folder-selector">
+              <input
+                type="text"
+                id="downloadFolder"
+                placeholder="Select download folder..."
+                readonly
+                value="./exports"
+              />
+              <button onclick="selectFolder()" class="folder-btn">
+                <i class="fas fa-folder-open"></i> Browse
+              </button>
+            </div>
+            <p class="settings-help">
+              All exported files will be saved to this folder
+            </p>
+          </div>
+
+          <div class="settings-group">
+            <label for="autoDownloadTime"
+              ><i class="fas fa-clock"></i> Auto-Download Time:</label
+            >
+            <div class="time-selector">
+              <input type="time" id="autoDownloadTime" value="17:00" />
+              <select id="timezone">
+                <option value="PKT" selected>PKT (Pakistan Time)</option>
+                <option value="UTC">UTC</option>
+                <option value="IST">IST (India)</option>
+              </select>
+            </div>
+            <p class="settings-help">
+              Automatic export will occur daily at this time
+            </p>
+          </div>
+
+          <div class="settings-group">
+            <label><i class="fas fa-file-excel"></i> Excel File Format:</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="separateSheets" checked />
+                Create separate sheets for each vehicle
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="includeHeaders" checked />
+                Include column headers in exports
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="overwriteFiles" checked />
+                Overwrite existing files
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <label><i class="fas fa-file-export"></i> Export Files:</label>
+            <div class="export-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="exportMovement" checked />
+                Movement Register
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="exportPol" checked />
+                POL Account Register
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="exportRepair" checked />
+                Repair & Maintenance Register
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Automation Status -->
+        <div class="settings-card">
+          <h3><i class="fas fa-robot"></i> Automation Status</h3>
+
+          <div class="status-grid">
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="fas fa-folder"></i>
+              </div>
+              <div class="status-content">
+                <div class="status-label">Download Folder</div>
+                <div class="status-value" id="folderStatus">Not selected</div>
+              </div>
+            </div>
+
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="status-content">
+                <div class="status-label">Next Auto-Export</div>
+                <div class="status-value" id="nextExport">Calculating...</div>
+              </div>
+            </div>
+
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="fas fa-history"></i>
+              </div>
+              <div class="status-content">
+                <div class="status-label">Last Export</div>
+                <div class="status-value" id="lastExport">Never</div>
+              </div>
+            </div>
+
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="status-content">
+                <div class="status-label">Total Entries</div>
+                <div class="status-value" id="totalEntriesCount">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="settings-card">
+          <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+
+          <div class="action-grid">
+            <button onclick="testAutoExport()" class="action-btn">
+              <i class="fas fa-play"></i> Test Auto-Export
+            </button>
+            <button onclick="downloadAllCSVs()" class="action-btn download">
+              <i class="fas fa-download"></i> Manual Export Now
+            </button>
+            <button onclick="clearAllData()" class="action-btn danger">
+              <i class="fas fa-trash"></i> Clear All Data
+            </button>
+            <button onclick="exportSettings()" class="action-btn">
+              <i class="fas fa-save"></i> Export Settings
+            </button>
+            <button onclick="importSettings()" class="action-btn">
+              <i class="fas fa-file-import"></i> Import Settings
+            </button>
+            <button onclick="backupData()" class="action-btn">
+              <i class="fas fa-database"></i> Backup Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Save Settings Button -->
+        <div class="settings-footer">
+          <button onclick="saveSettings()" class="save-settings-btn">
+            <i class="fas fa-save"></i> Save All Settings
+          </button>
+          <p class="settings-note">
+            <i class="fas fa-info-circle"></i> Settings are automatically saved
+            when changed
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
